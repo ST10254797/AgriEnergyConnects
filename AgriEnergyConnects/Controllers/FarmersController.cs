@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgriEnergyConnects.Data;
 using AgriEnergyConnects.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgriEnergyConnects.Controllers
 {
+    [Authorize]
     public class FarmersController : Controller
     {
         private readonly ApplicationDbContext _context;
