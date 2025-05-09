@@ -1,3 +1,6 @@
+using AgriEnergyConnects.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace AgriEnergyConnects
 {
     public class Program
@@ -8,6 +11,10 @@ namespace AgriEnergyConnects
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Register DbContext (BEFORE building the app)
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
