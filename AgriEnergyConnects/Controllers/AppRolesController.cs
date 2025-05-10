@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgriEnergyConnects.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Employee")]
     public class AppRolesController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
