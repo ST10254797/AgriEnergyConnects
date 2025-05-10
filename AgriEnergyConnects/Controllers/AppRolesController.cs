@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgriEnergyConnects.Controllers
 {
+    [Authorize]
     public class AppRolesController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-
         public AppRolesController(RoleManager<IdentityRole> roleManager)
         {
             _roleManager = roleManager;
