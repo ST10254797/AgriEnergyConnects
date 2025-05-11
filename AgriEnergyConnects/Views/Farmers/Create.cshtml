@@ -1,58 +1,73 @@
-﻿@model AgriEnergyConnects.Models.ViewModels.FarmerCreateViewModel
-
+﻿@model FarmerCreateViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Farmer";
 }
 
-<h1>Create</h1>
+<h1>Create Farmer</h1>
 
-<h4>Farmer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FullName" class="control-label"></label>
-                <input asp-for="FullName" class="form-control" />
-                <span asp-validation-for="FullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhoneNumber" class="control-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <!-- Add UserId dropdown -->
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="Model.Users">
-                    <option value="">-- Select a User --</option>
-                </select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form id="farmerForm" method="post">
+    <!-- Hidden field for UserId -->
+    <input type="hidden" id="selectedUserId" name="UserId" />
+
+    <div class="form-group">
+        <label>Select Farmer</label>
+        <select class="form-control" id="userDropdown">
+            <option value="">-- Select --</option>
+            @foreach (var user in Model.Users)
+            {
+                <option value="@user.Value" data-email="@user.Text"
+                        data-fullname="@user.Text.Split('@')[0]">
+                    @user.Text
+                </option>
+            }
+        </select>
+        <span class="text-danger" id="userError"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="form-group">
+        <label>Full Name</label>
+        <input class="form-control" id="fullName" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Email</label>
+        <input class="form-control" id="email" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input class="form-control" name="PhoneNumber" value="000-000-0000" />
+    </div>
+
+    <div class="form-group">
+        <label>Location</label>
+        <input class="form-control" name="Location" value="Unknown Location" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <script>
+        document.getElementById("userDropdown").addEventListener("change", function() {
+            const option = this.options[this.selectedIndex];
+            document.getElementById("fullName").value = option.dataset.fullname || "";
+            document.getElementById("email").value = option.value ? option.dataset.email : "";
+            document.getElementById("selectedUserId").value = option.value;
+        });
+
+        document.getElementById("farmerForm").addEventListener("submit", function(e) {
+            if (!document.getElementById("selectedUserId").value) {
+                e.preventDefault();
+                document.getElementById("userError").textContent = "Please select a farmer";
+                document.getElementById("userDropdown").classList.add("is-invalid");
+            }
+        });
+    </script>
+
+    <style>
+        .is-invalid {
+            border-color: #dc3545;
+        }
+    </style>
 }
