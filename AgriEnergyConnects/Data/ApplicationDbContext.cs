@@ -1,20 +1,17 @@
-﻿using AgriEnergyConnects.Models;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using AgriEnergyConnects.Models;
 
 namespace AgriEnergyConnects.Data
-{ 
-
-      public class ApplicationDbContext : IdentityDbContext
+{
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser> // Ensure ApplicationUser is used here
     {
-            public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-                    : base(options) // Specify <ApplicationDbContext> type
-            {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
 
-            }
-            public DbSet<Farmer> Farmers { get; set; }
-           public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Farmer> Farmers { get; set; }
         public DbSet<Product> Products { get; set; }
     }
-    
 }

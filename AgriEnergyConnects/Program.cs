@@ -1,6 +1,7 @@
 using AgriEnergyConnects.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using AgriEnergyConnects.Models;
 
 namespace AgriEnergyConnects
 {
@@ -17,9 +18,15 @@ namespace AgriEnergyConnects
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // Register default Identity with ApplicationUser (not IdentityUser)
+            builder.Services.AddDefaultIdentity<ApplicationUser>()
+                .AddDefaultTokenProviders()
+                .AddRoles<IdentityRole>()  // If you're using roles
+                .AddEntityFrameworkStores<ApplicationDbContext>(); // Ensure correct DbContext is used
+
+            // Add Identity services explicitly for SignInManager and UserManager
+            builder.Services.AddScoped<SignInManager<ApplicationUser>>();
+            builder.Services.AddScoped<UserManager<ApplicationUser>>();
 
             var app = builder.Build();
 
@@ -27,22 +34,23 @@ namespace AgriEnergyConnects
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseAuthorization();
 
+            // Enable static file serving (for CSS, JS, and image files)
+            app.UseStaticFiles();
+
+            // Map Razor Pages (for Identity)
             app.MapRazorPages();
 
-            app.MapStaticAssets();
+            // Configure default route for controllers
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }
