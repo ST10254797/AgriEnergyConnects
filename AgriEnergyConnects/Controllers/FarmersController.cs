@@ -9,6 +9,7 @@ using AgriEnergyConnects.Data;
 using AgriEnergyConnects.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using AgriEnergyConnects.Models.ViewModels;
 
 namespace AgriEnergyConnects.Controllers
 {
@@ -40,7 +41,7 @@ namespace AgriEnergyConnects.Controllers
             }
 
             var farmer = await _context.Farmers
-                .Include(f => f.User) // Include User information
+                .Include(f => f.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (farmer == null)
             {
@@ -51,35 +52,69 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Farmers/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            // Populate the User dropdown with available users (only those with a valid UserId)
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            return View();
+            // Fetch all users from the database asynchronously
+            var users = await _userManager.Users.ToListAsync();
+
+            // Filter users by "Farmer" role in-memory
+            var usersInFarmerRole = new List<ApplicationUser>();
+
+            foreach (var user in users)
+            {
+                // Check if the user is in the "Farmer" role
+                if (await _userManager.IsInRoleAsync(user, "Farmer"))
+                {
+                    usersInFarmerRole.Add(user);
+                }
+            }
+
+            // Create a model and bind the data to the view
+            var model = new FarmerCreateViewModel
+            {
+                Users = usersInFarmerRole
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id,
+                        Text = u.Email
+                    }).ToList()
+            };
+
+            return View(model);
         }
 
         // POST: Farmers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,PhoneNumber,Email,Location,UserId")] Farmer farmer)
+        public async Task<IActionResult> Create(FarmerCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // If the UserId isn't already set, assign the current logged-in user to this farmer
-                if (string.IsNullOrEmpty(farmer.UserId))
+                // Create a new Farmer entity with the selected UserId
+                var farmer = new Farmer
                 {
-                    farmer.UserId = _userManager.GetUserId(User);
-                }
+                    FullName = model.FullName,
+                    PhoneNumber = model.PhoneNumber,
+                    Email = model.Email,
+                    Location = model.Location,
+                    UserId = model.UserId // Store the selected UserId
+                };
 
                 _context.Add(farmer);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            // Re-populate the User dropdown in case of an error
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", farmer.UserId);
-            return View(farmer);
+            // Re-populate the Users dropdown if the model is not valid
+            model.Users = _context.Users.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+                Text = u.Email
+            }).ToList();
+
+            return View(model);
         }
+
 
         // GET: Farmers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -95,7 +130,6 @@ namespace AgriEnergyConnects.Controllers
                 return NotFound();
             }
 
-            // Populate the User dropdown with the current user selected
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", farmer.UserId);
             return View(farmer);
         }
@@ -131,7 +165,6 @@ namespace AgriEnergyConnects.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Re-populate the User dropdown in case of an error
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", farmer.UserId);
             return View(farmer);
         }
@@ -145,7 +178,7 @@ namespace AgriEnergyConnects.Controllers
             }
 
             var farmer = await _context.Farmers
-                .Include(f => f.User) // Include User details
+                .Include(f => f.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (farmer == null)
             {
@@ -173,6 +206,61 @@ namespace AgriEnergyConnects.Controllers
         private bool FarmerExists(int id)
         {
             return _context.Farmers.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public IActionResult CreateNewWithAccount()
+        {
+            // Populate a list of users for the dropdown in case you want to assign a specific user to the farmer
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateNewWithAccount(FarmerCreateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Step 1: Create the Identity User
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // Step 2: Assign role
+                    await _userManager.AddToRoleAsync(user, "Farmer");
+
+                    // Step 3: Create Farmer profile linked to the newly created user
+                    var farmer = new Farmer
+                    {
+                        FullName = model.FullName,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = model.Email,
+                        Location = model.Location,
+                        UserId = user.Id // Link the UserId to the Farmer
+                    };
+
+                    _context.Farmers.Add(farmer);
+                    await _context.SaveChangesAsync();
+
+                    TempData["Success"] = "Farmer and account created successfully.";
+                    return RedirectToAction(nameof(Index));
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            // In case of errors, we still need to populate the UserId dropdown
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", model.Email);
+            return View(model);
         }
     }
 }

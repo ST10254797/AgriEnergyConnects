@@ -1,4 +1,4 @@
-﻿@model AgriEnergyConnects.Models.Farmer
+﻿@model AgriEnergyConnects.Models.ViewModels.FarmerCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -32,10 +32,12 @@
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-            <!-- Optional: Add UserId if it's part of the Farmer model -->
+            <!-- Add UserId dropdown -->
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <select asp-for="UserId" class="form-control" asp-items="Model.Users">
+                    <option value="">-- Select a User --</option>
+                </select>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
