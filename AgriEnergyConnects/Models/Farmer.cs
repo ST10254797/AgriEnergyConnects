@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AgriEnergyConnects.Models
 {
@@ -21,5 +22,12 @@ namespace AgriEnergyConnects.Models
 
         [Display(Name = "Location")]
         public string Location { get; set; }
+
+        // 🔗 Link to Identity User
+        [Required]
+        public string UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
     }
 }

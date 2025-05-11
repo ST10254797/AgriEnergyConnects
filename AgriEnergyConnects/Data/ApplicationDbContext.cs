@@ -14,6 +14,7 @@ namespace AgriEnergyConnects.Data
             }
             public DbSet<Farmer> Farmers { get; set; }
            public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
     
 }
