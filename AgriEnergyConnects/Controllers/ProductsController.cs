@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using AgriEnergyConnects.Data;
 using AgriEnergyConnects.Models;
 using AgriEnergyConnects.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgriEnergyConnects.Controllers
 {
@@ -24,6 +25,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Products
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Index()
         {
             try
@@ -44,6 +46,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Products/Details/5
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -73,6 +76,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Farmer")]
         public IActionResult Create()
         {
             try
@@ -106,6 +110,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Create(Product product)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -134,6 +139,7 @@ namespace AgriEnergyConnects.Controllers
 
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -166,6 +172,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,ProductionDate,FarmerId")] Product product)
         {
             if (id != product.Id)
@@ -207,6 +214,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -238,6 +246,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
@@ -268,6 +277,7 @@ namespace AgriEnergyConnects.Controllers
             return _context.Products.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> EmployeeView(string? category, DateTime? startDate, DateTime? endDate)
         {
             var query = _context.Products.Include(p => p.Farmer).AsQueryable();
