@@ -4,6 +4,13 @@
     ViewData["Title"] = "Your Profile";
 }
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
 <h1>Your Profile</h1>
 <hr />
 
@@ -28,6 +35,10 @@
         <form asp-action="UpdateProfile" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <!-- Hidden fields to keep non-editable data during post -->
+            <input type="hidden" asp-for="FullName" />
+            <input type="hidden" asp-for="Email" />
+
             <!-- Phone Number -->
             <div class="form-group">
                 <label asp-for="PhoneNumber" class="control-label"></label>
@@ -51,7 +62,5 @@
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

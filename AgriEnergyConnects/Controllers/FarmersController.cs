@@ -214,6 +214,7 @@ namespace AgriEnergyConnects.Controllers
         // GET: Farmers/CreateNewWithAccount
         public async Task<IActionResult> CreateNewWithAccount()
         {
+            // Get ALL users (not filtered by role)
             var users = await _userManager.Users
                 .Select(u => new SelectListItem
                 {
@@ -225,7 +226,7 @@ namespace AgriEnergyConnects.Controllers
             return View(new FarmerCreateViewModel
             {
                 Users = users,
-                PhoneNumber = "000-000-0000",  // Set default values
+                PhoneNumber = "000-000-0000",
                 Location = "Unknown Location"
             });
         }
@@ -239,28 +240,44 @@ namespace AgriEnergyConnects.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var farmer = new Farmer
+                    // First ensure the selected user has Farmer role
+                    var user = await _userManager.FindByIdAsync(model.UserId);
+                    if (user == null)
                     {
-                        UserId = model.UserId,
-                        FullName = model.FullName,
-                        Email = model.Email,
-                        PhoneNumber = model.PhoneNumber,
-                        Location = model.Location
-                    };
+                        ModelState.AddModelError("", "Selected user not found");
+                    }
+                    else
+                    {
+                        // Create the farmer profile
+                        var farmer = new Farmer
+                        {
+                            UserId = model.UserId,
+                            FullName = model.FullName,
+                            Email = model.Email,
+                            PhoneNumber = model.PhoneNumber,
+                            Location = model.Location
+                        };
 
-                    _context.Farmers.Add(farmer);
-                    await _context.SaveChangesAsync();
+                        _context.Farmers.Add(farmer);
+                        await _context.SaveChangesAsync();
 
-                    TempData["Success"] = "Farmer profile created successfully";
-                    return RedirectToAction(nameof(Index));
+                        // Add to Farmer role if not already
+                        if (!await _userManager.IsInRoleAsync(user, "Farmer"))
+                        {
+                            await _userManager.AddToRoleAsync(user, "Farmer");
+                        }
+
+                        TempData["Success"] = "Farmer account created successfully";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Error saving farmer: {ex.Message}");
+                ModelState.AddModelError("", $"Error creating farmer account: {ex.Message}");
             }
 
-            // Repopulate users if validation fails
+            // Repopulate users dropdown if we need to return the view
             model.Users = await _userManager.Users
                 .Select(u => new SelectListItem
                 {
@@ -301,19 +318,18 @@ namespace AgriEnergyConnects.Controllers
         {
             if (ModelState.IsValid)
             {
-                var farmer = await _context.Farmers
-                    .FirstOrDefaultAsync(f => f.UserId == User.Identity.Name);
+                var userId = _userManager.GetUserId(User);
+                var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.UserId == userId);
 
                 if (farmer == null)
                 {
                     return NotFound();
                 }
 
-                // Update phone number and location
+                // Only update editable fields
                 farmer.PhoneNumber = model.PhoneNumber;
                 farmer.Location = model.Location;
 
-                // Save changes to the database
                 _context.Farmers.Update(farmer);
                 await _context.SaveChangesAsync();
 
@@ -321,8 +337,10 @@ namespace AgriEnergyConnects.Controllers
                 return RedirectToAction("Profile");
             }
 
-            return View(model);
+            // If validation fails, return the same model so fields remain filled
+            return View("Profile", model); // Important: use "Profile" view name
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetUserDetails(string userId)
