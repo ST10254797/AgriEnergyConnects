@@ -26,6 +26,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Farmers
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Index()
         {
             var farmers = await _context.Farmers.Include(f => f.User).ToListAsync();
@@ -33,6 +34,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Farmers/Details/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -53,6 +55,7 @@ namespace AgriEnergyConnects.Controllers
 
         // GET: Farmers/Create
         [HttpGet]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Create()
         {
             // Get all users with "Farmer" role
@@ -120,6 +123,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Farmers/Edit/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,6 +144,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Farmers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,PhoneNumber,Email,Location,UserId")] Farmer farmer)
         {
             if (id != farmer.Id)
@@ -173,6 +178,7 @@ namespace AgriEnergyConnects.Controllers
         }
 
         // GET: Farmers/Delete/5
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -194,6 +200,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Farmers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Employee")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var farmer = await _context.Farmers.FindAsync(id);
@@ -289,6 +296,7 @@ namespace AgriEnergyConnects.Controllers
             return View(model);
         }
         // GET: Farmers/Profile
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> Profile()
         {
             var userId = _userManager.GetUserId(User);
@@ -314,6 +322,7 @@ namespace AgriEnergyConnects.Controllers
         // POST: Farmers/UpdateProfile
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Farmer")]
         public async Task<IActionResult> UpdateProfile(FarmerProfileViewModel model)
         {
             if (ModelState.IsValid)
