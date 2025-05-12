@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgriEnergyConnects.Data;
 using AgriEnergyConnects.Models;
+using AgriEnergyConnects.Models.ViewModels;
 
 namespace AgriEnergyConnects.Controllers
 {
@@ -265,6 +266,37 @@ namespace AgriEnergyConnects.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);
+        }
+
+        public async Task<IActionResult> EmployeeView(string? category, DateTime? startDate, DateTime? endDate)
+        {
+            var query = _context.Products.Include(p => p.Farmer).AsQueryable();
+
+            var categories = await _context.Products
+                .Select(p => p.Category)
+                .Distinct()
+                .OrderBy(c => c)
+                .ToListAsync();
+
+            if (!string.IsNullOrEmpty(category))
+                query = query.Where(p => p.Category == category);
+
+            if (startDate.HasValue)
+                query = query.Where(p => p.ProductionDate >= startDate.Value);
+
+            if (endDate.HasValue)
+                query = query.Where(p => p.ProductionDate <= endDate.Value);
+
+            var viewModel = new ProductFilterViewModel
+            {
+                Category = category,
+                StartDate = startDate,
+                EndDate = endDate,
+                Categories = categories,
+                Products = await query.ToListAsync()
+            };
+
+            return View(viewModel);
         }
     }
 }
