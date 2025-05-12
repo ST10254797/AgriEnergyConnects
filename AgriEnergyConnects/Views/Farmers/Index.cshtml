@@ -1,67 +1,70 @@
 ﻿@model IEnumerable<AgriEnergyConnects.Models.Farmer>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Farmers";
 }
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">All Farmers</h2>
+        <a asp-action="Create" class="btn btn-success">
+            Create New
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                User Email
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @if (item.User != null)
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.First().FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().PhoneNumber)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.First().Location)</th>
+                        <th>User Email</th>
+                        <th style="width: 180px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        @item.User.Email
+                        <tr>
+                            <td>@item.FullName</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.Email</td>
+                            <td>@item.Location</td>
+                            <td>
+                                @if (item.User != null)
+                                {
+                                    <span class="text-success">@item.User.Email</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No User Assigned</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1">
+                                    Edit
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1">
+                                    Details
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                        <span>No User Assigned</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            No farmers found.
+        </div>
+    }
+</div>
