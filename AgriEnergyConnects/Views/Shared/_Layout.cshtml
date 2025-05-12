@@ -26,25 +26,50 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Farmers" asp-action="Index">Farmers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Farmers" asp-action="Profile">Farmers Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Products" asp-action="EmployeeView">All Products</a>
-                        </li>
+
+                        <!-- Show Farmers Link Only for Employees -->
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Farmers" asp-action="Index">Farmers</a>
+                            </li>
+                        }
+
+                        <!-- Show Profile Link Only for Farmers -->
+                        @if (User.IsInRole("Farmer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Farmers" asp-action="Profile">Farmers Profile</a>
+                            </li>
+                        }
+
+                        <!-- Products Link for Farmers (Product Index) -->
+                        @if (User.IsInRole("Farmer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
+                            </li>
+                        }
+
+                        <!-- Employee View All Products Link for Employees -->
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Products" asp-action="EmployeeView">All Products</a>
+                            </li>
+                        }
+
+                        <!-- Roles Link Only for Employees -->
+                        @if (User.IsInRole("Employee"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
-            <partial name="_LoginPartial"/>
+            <partial name="_LoginPartial" />
         </nav>
     </header>
     <div class="container">
