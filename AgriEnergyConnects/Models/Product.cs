@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace AgriEnergyConnects.Models
 {
@@ -20,10 +21,11 @@ namespace AgriEnergyConnects.Models
         public DateTime ProductionDate { get; set; }
 
         // 🔗 Link to Farmer
-        [Required]
+
         public int FarmerId { get; set; }
 
         [ForeignKey("FarmerId")]
+        [ValidateNever] // 🔒 Tell model binder to skip validation
         public Farmer Farmer { get; set; }
     }
 }

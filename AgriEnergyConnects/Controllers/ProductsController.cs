@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,17 +14,32 @@ namespace AgriEnergyConnects.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, ILogger<ProductsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Products.Include(p => p.Farmer);
-            return View(await applicationDbContext.ToListAsync());
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var products = await _context.Products
+                    .Where(p => p.Farmer.UserId == userId)
+                    .Include(p => p.Farmer)
+                    .ToListAsync();
+
+                return View(products);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching products for the user.");
+                return View("Error");
+            }
         }
 
         // GET: Products/Details/5
@@ -34,40 +50,86 @@ namespace AgriEnergyConnects.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Farmer)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            try
             {
-                return NotFound();
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var product = await _context.Products
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(m => m.Id == id && m.Farmer.UserId == userId);
 
-            return View(product);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                return View(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching product details.");
+                return View("Error");
+            }
         }
 
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["FarmerId"] = new SelectList(_context.Farmers, "Id", "Email");
-            return View();
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var farmer = _context.Farmers.FirstOrDefault(f => f.UserId == userId);
+
+                if (farmer == null)
+                {
+                    _logger.LogWarning("Farmer not found for user {UserId}", userId);
+                    return Unauthorized();
+                }
+
+                // Pass a new product with the correct FarmerId
+                var product = new Product
+                {
+                    FarmerId = farmer.Id
+                };
+
+                return View(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error preparing create view.");
+                return View("Error");
+            }
         }
 
+
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Category,ProductionDate,FarmerId")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            // Find farmer by user ID
+            var farmer = await _context.Farmers.FirstOrDefaultAsync(f => f.UserId == userId);
+            if (farmer == null)
+            {
+                ModelState.AddModelError(string.Empty, "Farmer not found.");
+                return View(product);
+            }
+
+            // Assign the FK only — not the navigation property
+            product.FarmerId = farmer.Id;
+
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FarmerId"] = new SelectList(_context.Farmers, "Id", "Email", product.FarmerId);
+
             return View(product);
         }
+
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -77,18 +139,29 @@ namespace AgriEnergyConnects.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            try
             {
-                return NotFound();
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var product = await _context.Products
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(m => m.Id == id && m.Farmer.UserId == userId);
+
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                ViewData["FarmerId"] = new SelectList(_context.Farmers.Where(f => f.UserId == userId), "Id", "Email", product.FarmerId);
+                return View(product);
             }
-            ViewData["FarmerId"] = new SelectList(_context.Farmers, "Id", "Email", product.FarmerId);
-            return View(product);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching product for editing.");
+                return View("Error");
+            }
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Category,ProductionDate,FarmerId")] Product product)
@@ -98,28 +171,37 @@ namespace AgriEnergyConnects.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(product);
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var productToUpdate = await _context.Products
+                        .Include(p => p.Farmer)
+                        .FirstOrDefaultAsync(p => p.Id == id && p.Farmer.UserId == userId);
+
+                    if (productToUpdate == null)
+                    {
+                        return Unauthorized();
+                    }
+
+                    productToUpdate.Name = product.Name;
+                    productToUpdate.Category = product.Category;
+                    productToUpdate.ProductionDate = product.ProductionDate;
                     await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                var userGuid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                ViewData["FarmerId"] = new SelectList(_context.Farmers.Where(f => f.UserId == userGuid), "Id", "Email", product.FarmerId);
+                return View(product);
             }
-            ViewData["FarmerId"] = new SelectList(_context.Farmers, "Id", "Email", product.FarmerId);
-            return View(product);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error editing product.");
+                return View("Error");
+            }
         }
 
         // GET: Products/Delete/5
@@ -130,15 +212,25 @@ namespace AgriEnergyConnects.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .Include(p => p.Farmer)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
+            try
             {
-                return NotFound();
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var product = await _context.Products
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(m => m.Id == id && m.Farmer.UserId == userId);
 
-            return View(product);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                return View(product);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching product for deletion.");
+                return View("Error");
+            }
         }
 
         // POST: Products/Delete/5
@@ -146,14 +238,27 @@ namespace AgriEnergyConnects.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+            try
             {
-                _context.Products.Remove(product);
-            }
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var product = await _context.Products
+                    .Include(p => p.Farmer)
+                    .FirstOrDefaultAsync(p => p.Id == id && p.Farmer.UserId == userId);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (product == null)
+                {
+                    return Unauthorized();
+                }
+
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting product.");
+                return View("Error");
+            }
         }
 
         private bool ProductExists(int id)
