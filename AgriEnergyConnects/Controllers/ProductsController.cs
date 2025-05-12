@@ -85,10 +85,11 @@ namespace AgriEnergyConnects.Controllers
                     return Unauthorized();
                 }
 
-                // Pass a new product with the correct FarmerId
+                // Pass a new product with the correct FarmerId and default ProductionDate
                 var product = new Product
                 {
-                    FarmerId = farmer.Id
+                    FarmerId = farmer.Id,
+                    ProductionDate = DateTime.Now // Set default to today's date
                 };
 
                 return View(product);
