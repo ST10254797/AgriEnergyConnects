@@ -195,8 +195,8 @@ The application follows the standard ASP.NET Core MVC structure:
 The application includes sample data to facilitate testing:
 
 - **Sample Users**:
-  - Employee: Username: employee1, Password: password123
-  - Farmers: Username: farmer1, Password: password123, Username: farmer2, Password: password123
+  - Employee: Email: employee1@gmail,com, Password: password123
+  - Farmers: Email: farmer1@gmail.com, Password: password123, Email: farmer2@gmail.com, Password: password123
 
 - **Sample Products**:
   - Organic Tomatoes
@@ -212,7 +212,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ##  Contact
 
 For questions or support, please contact:
-- Email: arshadbhula547@gmail.com
+- Email: cristianoronaldonaidoo@gmail.com
 - GitHub: [https://github.com/ST10343093/]([https://github.com/yourusername](https://github.com/ST10343093/Prog_POE))
 
 ---
