@@ -60,8 +60,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 bash
-git clone https://github.com/ST10343093/Prog_POE
-cd Prog_POE
+git clone https://github.com/ST10254797/AgriEnergyConnects
+cd AgriEnergyConnects
 
 
 ### 2. Database Configuration
