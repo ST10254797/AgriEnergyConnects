@@ -1,0 +1,25 @@
+﻿@model List<AgriEnergyConnects.Models.ChatMessage>
+
+@{
+    ViewData["Title"] = "Farmer Chat";
+}
+
+<h2>Farmer Chat</h2>
+
+<form asp-action="Send" method="post">
+    <textarea name="message" rows="3" style="width:100%;" placeholder="Type your message..."></textarea><br />
+    <button type="submit">Send</button>
+</form>
+
+<hr />
+
+<div>
+    @foreach (var msg in Model.OrderByDescending(m => m.SentAt))
+    {
+        <div style="margin-bottom:1rem;">
+            <strong>@msg.User.Firstname @msg.User.Lastname</strong>
+            <small style="color:gray;">@msg.SentAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</small>
+            <p>@msg.Message</p>
+        </div>
+    }
+</div>

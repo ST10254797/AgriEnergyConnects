@@ -13,5 +13,6 @@ namespace AgriEnergyConnects.Data
 
         public DbSet<Farmer> Farmers { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
     }
 }
