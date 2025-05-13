@@ -1,4 +1,4 @@
- # 🌞🌱 Agri-Energy Connect 🔋 🌞
+<h1 align="center">🌞🌱 Agri-Energy Connect 🔋 🌞</h1>
 
 <div align="center">
   
