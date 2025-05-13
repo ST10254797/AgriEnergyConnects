@@ -141,6 +141,10 @@ The application should now be running at https://localhost:7066/.
    - Add new products using the "Create New Product" button
    - Edit, View, or delete existing products from this page
 
+3. **Forum/Farmers chat**:
+    - Navigate to the "Farmers Chat" to chat with other farmers
+    - Tap on send message to send a message to the community
+
 ##  Development Workflow
 
 ### Project Structure
@@ -149,12 +153,14 @@ The application follows the standard ASP.NET Core MVC structure:
 
 - **Controllers/**: Contains the application's controllers
   - AppRolesController.cs: Handles user authentication
+  - ChatController.cs:Handles the chats between the farmers
   - FarmersController.cs: Manages farmer-related operations
   - HomeController.cs: Handles dashboard and home page
   - ProductsController.cs: Manages product operations
 
 - **Models/**: Contains the application's data models
   - ApplicationUser.cs: Represents users (employees and farmers)
+  - ChatMessage.cs: Represents the chats
   - Product.cs: Represents agricultural products
   - ErrorViewModel.cs: Used for error handling
   - Farmer.cs: Represents the Farmers details
@@ -164,6 +170,7 @@ The application follows the standard ASP.NET Core MVC structure:
   - Farmers/: Farmer management views
   - Home/: Dashboard views
   - Products/: Product management views
+  - Chats/: Manages the messages
   
 - **Data/**: Contains database context and configurations
   - ApplicationDbContext.cs: Entity Framework database context
