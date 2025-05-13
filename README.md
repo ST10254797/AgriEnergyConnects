@@ -109,18 +109,17 @@ The application should now be running at https://localhost:7066/.
 ##  Using the Application
 
 ### Landing Page
-- The landing page provides an overview of the platform's features and benefits
-- Access the login page using the "Sign In" button
+- The landing page provides a **welcome screen**.
+- It includes access to the **Login** page (via the **Login** button) and the **Register** page (via the **Register** button) for creating a new account.
 
 ### Authentication
 - Use the following demo credentials to test the application:
-  - Employee: Username: employee1, Password: password123
-  - Farmer: Username: farmer1, Password: password123
+  - **Employee**: Email: `AD@gmail.com`, Password: `Ameen@123`
+  - **Farmer**: Email: `RP@gmail.com`, Password: `Ryan@123`
 
 ### Dashboard
-- Upon successful login, users are directed to the home dashboard
-- The dashboard displays key statistics and system features
-
+- When a user successfully registers or logs in, they are redirected to the **Home** page.
+- The home page displays a **welcome message**, and the **navigation bar** is dynamically filled with views relevant to the user's role.
 ### For Employees
 1. **Managing Farmers**:
    - Navigate to the "Farmers" section to view the list of registered farmers
