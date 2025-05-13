@@ -67,12 +67,12 @@ cd AgriEnergyConnects
 ### 2. Database Configuration
 
 1. Open SQL Server Management Studio or your preferred SQL client
-2. Create a new database named AgriEnergyConnectDB
+2. Create a new database named AgriEnergyDB
 3. Update the connection string in appsettings.json to match your SQL Server instance:
 
 json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=lab7L95SR\\SQLEXPRESS;Database=AgriEnergyConnectDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+  "DefaultConnection": "Server=LAPTOP-KM8P2INL;Database=AgriEnergyDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
 }
 
 
@@ -82,6 +82,7 @@ Run the following commands in the project directory to create the database schem
 
 Using Visual Studio:
 - Open the Package Manager Console (Tools > NuGet Package Manager > Package Manager Console)
+- Run: Add-Database InitialCreate
 - Run: Update-Database
 
 Using the command line:
