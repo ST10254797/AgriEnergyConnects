@@ -59,9 +59,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Education">Education</a>
-                        </li>
 
                         <!-- Show Farmers Link Only for Employees -->
                         @if (User.IsInRole("Employee"))
@@ -78,6 +75,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                             </li>
                         }
+                        @if (User.IsInRole("Farmer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Education">Education</a>
+                            </li>
+                        }
                         <!-- Show Profile Link Only for Farmers -->
                         @if (User.IsInRole("Farmer"))
                         {
@@ -85,7 +88,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Farmers" asp-action="Profile">Farmers Profile</a>
                             </li>
                         }
-
+   
 
                         <!-- Employee View All Products Link for Employees -->
                         @if (User.IsInRole("Employee"))
