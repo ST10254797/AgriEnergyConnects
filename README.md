@@ -148,26 +148,23 @@ The application should now be running at https://localhost:7066/.
 The application follows the standard ASP.NET Core MVC structure:
 
 - **Controllers/**: Contains the application's controllers
-  - AuthController.cs: Handles user authentication
-  - BaseController.cs: Base controller with common functionality
+  - AppRolesController.cs: Handles user authentication
   - FarmersController.cs: Manages farmer-related operations
   - HomeController.cs: Handles dashboard and home page
-  - LandingController.cs: Controls the landing page
   - ProductsController.cs: Manages product operations
 
 - **Models/**: Contains the application's data models
-  - User.cs: Represents users (employees and farmers)
+  - ApplicationUser.cs: Represents users (employees and farmers)
   - Product.cs: Represents agricultural products
   - ErrorViewModel.cs: Used for error handling
+  - Farmer.cs: Represents the Farmers details
 
 - **Views/**: Contains the application's views, organized by controller
-  - Auth/: Login and registration views
+  - AppRoles/: Login and registration views
   - Farmers/: Farmer management views
   - Home/: Dashboard views
-  - Landing/: Landing page views
   - Products/: Product management views
-  - Shared/: Layouts and shared components
-
+  
 - **Data/**: Contains database context and configurations
   - ApplicationDbContext.cs: Entity Framework database context
 
