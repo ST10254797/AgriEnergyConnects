@@ -94,7 +94,7 @@ dotnet ef database update
 ### 4. Build and Run the Application
 
 #### Using Visual Studio:
-1. Open the solution file (Prog_POE.sln) in Visual Studio
+1. Open the solution file (AgriEnergyConnects.sln) in Visual Studio
 2. Build the solution (Ctrl+Shift+B)
 3. Press F5 to run the application
 
@@ -104,7 +104,7 @@ dotnet build
 dotnet run
 
 
-The application should now be running at https://localhost:7087/ or http://localhost:5099/.
+The application should now be running at https://localhost:7066/.
 
 ##  Using the Application
 
