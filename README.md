@@ -87,6 +87,7 @@ Using Visual Studio:
 
 Using the command line:
 bash
+dotnet ef migrations add InitialCreate
 dotnet ef database update
 
 
