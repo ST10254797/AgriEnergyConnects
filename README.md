@@ -123,23 +123,23 @@ The application should now be running at https://localhost:7066/.
 ### For Employees
 1. **Managing Farmers**:
    - Navigate to the "Farmers" section to view the list of registered farmers
-   - Add new farmers using the "Add New Farmer" button
+   - Add new farmers using the "Create New" button
    - View detailed farmer profiles by clicking on "Details"
+   - Delete Farmer profiles by clicking on "Delete"
 
 2. **Viewing Products**:
    - Access the "All Products" section to browse products from all farmers
    - Filter products by category or date range
-   - View detailed product information by clicking on a product
 
 ### For Farmers
 1. **Managing Profile**:
-   - Access your profile via the dropdown menu in the top-right corner
-   - Edit your profile information using the "Edit Profile" button
+   - Access your profile from the "Farmers Profile" tab
+   - Edit/Update your profile information using the "Save Changes" button
 
 2. **Managing Products**:
-   - Navigate to "My Products" to view your current product listings
-   - Add new products using the "Add New Product" button
-   - View or delete existing products from this page
+   - Navigate to "Products" to view your current product listings
+   - Add new products using the "Create New Product" button
+   - Edit, View, or delete existing products from this page
 
 ##  Development Workflow
 
