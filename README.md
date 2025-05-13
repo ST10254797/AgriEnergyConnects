@@ -179,7 +179,6 @@ The application follows the standard ASP.NET Core MVC structure:
 - **wwwroot/**: Contains static files
   - css/: Stylesheet files
   - js/: JavaScript files
-  - images/: Image assets
   - lib/: Client-side libraries
 
 ### Extending the Application
@@ -203,7 +202,7 @@ The application follows the standard ASP.NET Core MVC structure:
 The application includes sample data to facilitate testing:
 
 - **Sample Users**:
-  - Employee: Email: employee1@gmail,com, Password: password123
+  - Employee: Email: employee1@gmail.com, Password: password123
   - Farmers: Email: farmer1@gmail.com, Password: password123, Email: farmer2@gmail.com, Password: password123
 
 - **Sample Products**:
