@@ -3,7 +3,7 @@
 <div align="center">
   
   ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-9.0-blue?style=for-the-badge&logo=dotnet)
-  ![C#](https://img.shields.io/badge/C%23-8.0-purple?style=for-the-badge&logo=csharp)
+  ![C#](https://img.shields.io/badge/C%23-13.0-purple?style=for-the-badge&logo=csharp)
   ![SQL Server](https://img.shields.io/badge/SQL%20Server-2019-red?style=for-the-badge&logo=microsoftsqlserver)
   ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0-blueviolet?style=for-the-badge&logo=bootstrap)
   
@@ -40,7 +40,7 @@ The platform supports two primary user roles:
 
 ##  Technology Stack
 
-- **Framework**: ASP.NET Core 7.0 MVC
+- **Framework**: ASP.NET Core 9.0 MVC
 - **Frontend**: HTML5, CSS3, JavaScript, Bootstrap 5
 - **Backend**: C#, Entity Framework Core
 - **Database**: Microsoft SQL Server
@@ -50,7 +50,7 @@ The platform supports two primary user roles:
 ##  Prerequisites
 
 Before you begin, ensure you have the following installed:
-- [.NET 7.0 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 - [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/) (recommended) or [Visual Studio Code](https://code.visualstudio.com/)
 - [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (Express edition is sufficient for development)
 - [SQL Server Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms) (or any SQL client)
