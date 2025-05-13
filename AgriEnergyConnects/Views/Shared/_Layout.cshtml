@@ -68,17 +68,18 @@
                             </li>
                         }
 
+                        @if (User.IsInRole("Farmer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Education">Education</a>
+                            </li>
+                        }
+
                         <!-- Products Link for Farmers (Product Index) -->
                         @if (User.IsInRole("Farmer"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Farmer"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Home" asp-action="Education">Education</a>
                             </li>
                         }
 
