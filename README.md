@@ -2,19 +2,20 @@
 
 <div align="center">
   
-  ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-9.0-blue?style=for-the-badge&logo=dotnet)
+  ![ASP.NET Core](https://img.shields.io/badge/ASP.NET%20Core-9.0-green?style=for-the-badge&logo=dotnet)
   ![C#](https://img.shields.io/badge/C%23-13.0-purple?style=for-the-badge&logo=csharp)
-  ![SQL Server](https://img.shields.io/badge/SQL%20Server-2019-red?style=for-the-badge&logo=microsoftsqlserver)
+  ![SQL Server](https://img.shields.io/badge/SQL%20Server-2019-blue?style=for-the-badge&logo=microsoftsqlserver)
   ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.0-blueviolet?style=for-the-badge&logo=bootstrap)
   
-  <h3>Sustainable Agriculture Meets Green Energy</h3>
-  
-  <p>A modern platform connecting sustainable farmers with renewable energy solutions</p>
+<h3>Where Sustainable Farming Powers a Greener Future</h3>
+
+<p>Agri-Energy Connect bridges eco-conscious farmers with innovative renewable energy solutions for a cleaner, smarter tomorrow.</p>
+
 </div>
 
 ##  Overview
 
-Agri-Energy Connect is a web-based platform designed to bridge the gap between sustainable agriculture and green energy solutions in South Africa. The platform connects farmers with energy experts, facilitating knowledge sharing, resource access, and collaboration opportunities to promote sustainable farming practices and renewable energy adoption.
+Agri-Energy Connect is a web-based platform dedicated to uniting sustainable agriculture with green energy solutions across South Africa. It serves as a dynamic hub where farmers and energy experts can connect, share knowledge, access valuable resources, and collaborate on initiatives that promote eco-friendly farming practices and the adoption of renewable energy.
 
 ##  Key Features
 
@@ -220,8 +221,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For questions or support, please contact:
 - Email: cristianoronaldonaidoo@gmail.com
-- GitHub: [[https://github.com/ST10254797]([https://github.com/yourusername](https://github.com/ST10254797)))
+- GitHub: [ST10254797](https://github.com/ST10254797)
 
 ---
 
-Thank you for using Agri-Energy Connect! We hope this platform contributes to more sustainable farming practices and broader adoption of renewable energy solutions in agriculture.
+Thank you for being part of Agri-Energy Connect!
+Together, we’re cultivating a future where sustainable agriculture and clean energy go hand in hand.
