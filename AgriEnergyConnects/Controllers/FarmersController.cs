@@ -9,8 +9,7 @@ using AgriEnergyConnects.Data;
 using AgriEnergyConnects.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using AgriEnergyConnects.Models.ViewModels;
-
+using AgriEnergyConnects.Models.ViewModels;           
 namespace AgriEnergyConnects.Controllers
 {
     [Authorize]
