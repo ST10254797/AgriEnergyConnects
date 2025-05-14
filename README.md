@@ -222,6 +222,11 @@ For questions or support, please contact:
 - Email: cristianoronaldonaidoo@gmail.com
 - GitHub: [ST10254797](https://github.com/ST10254797)
 
+## 🎥 Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/5tM5Z1CfliA/0.jpg)](https://www.youtube.com/watch?v=5tM5Z1CfliA)
+
+Click the thumbnail above to watch the demo video on YouTube.
 ---
 
 Thank you for being part of Agri-Energy Connect!
