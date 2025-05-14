@@ -29,3 +29,50 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+.icon-circle {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--light-color);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    color: var(--primary-color);
+    font-size: 2rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-box:hover .icon-circle {
+    transform: scale(1.1);
+    background-color: var(--accent-color);
+    color: white;
+}
+.hero-section {
+    background: linear-gradient(to right, #2e7d32, #66bb6a);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 100px 0;
+}
+
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.3); /* optional dark overlay */
+        z-index: 1;
+    }
+
+    .hero-section .container {
+        position: relative;
+        z-index: 2;
+    }
+
+.btn-light.text-success:hover {
+    background-color: #43a047;
+    color: white;
+}
